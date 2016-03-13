@@ -1,25 +1,23 @@
-
 /*
 Global Settings
-*/ 
+*/
 settings = {
-	animationTime : 200,//time it takes to animate anything on the site
-	dbug : !false, //output console logsd
-	hideOffset:-1000, //how far the sliding animations will be hidden outside of <body>
-	rotationDegree : 90, //rotation degree for the social button
-	navigationClick : false, //set to true if you want navigation to show on click. else it will default to hover
+    animationTime: 200, //time it takes to animate anything on the site
+    dbug: !false, //output console logsd
+    hideOffset: -1000, //how far the sliding animations will be hidden outside of <body>
+    rotationDegree: 90, //rotation degree for the social button
+    navigationClick: false, //set to true if you want navigation to show on click. else it will default to hover
 }
 
 /*
 CSS breakpoints
 */
-breakpoints = { 
-	mobileSearch : false,//mobile search drops down instead of sliding
-	mobileNavigation : false,//navigation starts collapsing
-	mobileSubNavigation : false,//subnavigation has 1 row instead of 2
-	mobileMoreDropdown : false,
-}   
-
+breakpoints = {
+    mobileSearch: false, //mobile search drops down instead of sliding
+    mobileNavigation: false, //navigation starts collapsing
+    mobileSubNavigation: false, //subnavigation has 1 row instead of 2
+    mobileMoreDropdown: false,
+}
 
 
 
@@ -27,448 +25,454 @@ breakpoints = {
 /*
 Global Functions
 */
-window.exists = function(elem){ 
+window.exists = function(elem) {
 
-	return elem!==undefined && elem!==null && elem!="";
+    return elem !== undefined && elem !== null && elem != "";
 }
 
 /*
 Check if it is a touch-supporting phone/tablet/laptop
 */
 window.isTouchEnabled = function() {
-		 
+
     return !!('ontouchstart' in window);
 }
 
-   
-  
+
+
 navigationDropdown = {
 
-	dbug : false,  
+    dbug: false,
 
-	trigger : null,
-	icon : null,
-	dropdown : null,
-	close : null,
-	overflow : null,
-	scroll:0,
+    trigger: null,
+    icon: null,
+    dropdown: null,
+    close: null,
+    overflow: null,
+    scroll: 0,
 
-	init : function(options){
+    init: function(options) {
 
-		var self = this;
-		self.dbug && console.log("navigationDropdown init");
+        var self = this;
+        self.dbug && console.log("navigationDropdown init");
 
-		/*
-		Initiate globals
-		*/
-        self.dbug	  = (options.dbug !== undefined) 	 ? options.dbug 	: false;  
-        self.trigger  = (options.trigger !== undefined)  ? options.trigger  : $("#navigation-button");  
-        self.icon     = (options.icon !== undefined)     ? options.trigger  : $("#navigation-button").find(".icon");  
-        self.dropdown = (options.dropdown !== undefined) ? options.dropdown : $("#navigation-dropdown"); 
-        self.close    = (options.close !== undefined)    ? options.close    : $("#navigation-dropdown").find(".close"); 
- 		self.overflow = (options.overflow !== undefined) ? options.overflow : $("body").css("overflow-Y"); 
- 
+        /*
+        Initiate globals
+        */
+        self.dbug = (options.dbug !== undefined) ? options.dbug : false;
+        self.trigger = (options.trigger !== undefined) ? options.trigger : $("#navigation-button");
+        self.icon = (options.icon !== undefined) ? options.trigger : $("#navigation-button").find(".icon");
+        self.dropdown = (options.dropdown !== undefined) ? options.dropdown : $("#navigation-dropdown");
+        self.close = (options.close !== undefined) ? options.close : $("#navigation-dropdown").find(".close");
+        self.overflow = (options.overflow !== undefined) ? options.overflow : $("body").css("overflow-Y");
+
         /*
 		Set dropdown visibility to 'hidden=true' until trigger is clicked
         */
-		self.trigger.data("hidden",true);   
-	},
+        self.trigger.data("hidden", true);
+    },
 
-	topOffset : function(){ 
+    topOffset: function() {
 
-		return $("#navigation").offset().top - $("header").offset().top + $("#navigation").outerHeight();
-	},
+        return $("#navigation").offset().top - $("header").offset().top + $("#navigation").outerHeight();
+    },
 
-	clickTrigger : function() { 
+    clickTrigger: function() {
 
-		var self = navigationDropdown;
-	    var deferred = $.Deferred();
+        var self = navigationDropdown;
+        var deferred = $.Deferred();
 
-		self.dbug && console.log("navigationDropdown click");
-  		  
-    	//if we have already opened subnavigation and clicked the same link that's opened now
-    	if(self.trigger.data("hidden")!==undefined && !self.trigger.data("hidden"))    	
-    		deferred.resolve(false);   
-    	else
-    		deferred.resolve(self.trigger); 
- 		 
-	    return deferred.promise();  
-	},
+        self.dbug && console.log("navigationDropdown click");
 
-	/*
-	Hide more dropdown 
-	*/
-	hideTrigger : function() { 
+        //if we have already opened subnavigation and clicked the same link that's opened now
+        if (self.trigger.data("hidden") !== undefined && !self.trigger.data("hidden"))
+            deferred.resolve(false);
+        else
+            deferred.resolve(self.trigger);
 
-		var self = navigationDropdown;
-	    var deferred = $.Deferred();
+        return deferred.promise();
+    },
 
-		self.dbug && console.log("navigationDropdown hide");
-   
-		self.dropdown
-	    	.animate({
-	    		top:settings.hideOffset
-	    	},settings.animationTime,function(){
-	 
-				self.trigger.data("hidden",true)
-				self.icon.hide(); 
+    /*
+    Hide more dropdown 
+    */
+    hideTrigger: function() {
 
-				deferred.resolve(true);  
-	    	}); 
-	    return deferred.promise();  
-	}, 
+        var self = navigationDropdown;
+        var deferred = $.Deferred();
 
-	/*
-	Show more dropdown 
-	*/
-	showTrigger : function() { 
+        self.dbug && console.log("navigationDropdown hide");
 
-		var self = navigationDropdown;
-	    var deferred = $.Deferred();
-   
-		self.dbug && console.log("navigationDropdown show");
-		   
-		self.trigger.data("hidden",false);
-    	self.icon.show();  
+        self.dropdown
+            .animate({
+                top: settings.hideOffset
+            }, settings.animationTime, function() {
 
-    	self.dropdown.animate({
-    		top:self.topOffset() 
+                self.trigger.data("hidden", true)
+                self.icon.hide();
 
-    	},settings.animationTime,function(){
+                deferred.resolve(true);
+            });
+        return deferred.promise();
+    },
 
-			deferred.resolve(true);  
-    	});  
+    /*
+    Show more dropdown 
+    */
+    showTrigger: function() {
 
-	    return deferred.promise();  
-	},  
+        var self = navigationDropdown;
+        var deferred = $.Deferred();
 
-	/*
-	Show more dropdown 
-	*/
-	scrollableOn : function() { 
- 		  
-		var self = navigationDropdown;
+        self.dbug && console.log("navigationDropdown show");
 
-		if(!breakpoints.mobileMoreDropdown)
-			return;
-		self.scroll = $(window).scrollTop();
-		$('html, body').animate({
-			scrollTop: 0
-		}, 0, 'linear', function() {
+        self.trigger.data("hidden", false);
+        self.icon.show();
 
-			setTimeout(function(){
+        self.dropdown.animate({
+            top: self.topOffset()
 
-		 		var $wrap = self.dropdown;
-		 		var height = $("#navigation").offset().top+$("#navigation").outerHeight();//+$wrap.find(".close").outerHeight();
-				height = $(window).height()-height;
+        }, settings.animationTime, function() {
 
-				$wrap.css({
-				  height:height,
-				}); 
-				$wrap.find(".wrap").css({
-				  height:height-40,
-				}); 
+            deferred.resolve(true);
+        });
 
-				$wrap.find(".wrap").bind( 'mousewheel DOMMouseScroll', function (event) {
-				    var eventScroll = event.originalEvent;
-				    var delta = eventScroll.wheelDelta || -eventScroll.detail;
+        return deferred.promise();
+    },
 
-				    this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-				    event.preventDefault();
-				});
+    /*
+    Show more dropdown 
+    */
+    scrollableOn: function() {
 
-				$("body").css({
-					overflowY:"hidden"
-				}); 
-			},500);
+        var self = navigationDropdown;
 
-		});
-	},   
-	scrollableOff : function() { 
- 		
-		var self = navigationDropdown;
+        if (!breakpoints.mobileMoreDropdown)
+            return;
+        self.scroll = $(window).scrollTop();
+        $('html, body').animate({
+            scrollTop: 0
+        }, 0, 'linear', function() {
 
-		if(!breakpoints.mobileMoreDropdown)
-			return;
+            setTimeout(function() {
 
- 		var $wrap = self.dropdown; 
-		$wrap.css({
-		  height:"auto",
-		}); 
-		$wrap.find(".wrap").css({
-		  height:"auto",
-		}); 
- 
-		$("body").css({
-			overflowY:self.overflow
-		}); 
-		$(window).scrollTop(self.scroll);
-		
-	},   
+                var $wrap = self.dropdown;
+                var height = $("#navigation").offset().top + $("#navigation").outerHeight(); //+$wrap.find(".close").outerHeight();
+                height = $(window).height() - height;
+
+                $wrap.css({
+                    height: height,
+                });
+                $wrap.find(".wrap").css({
+                    height: height - 40,
+                });
+
+                $wrap.find(".wrap").bind('mousewheel DOMMouseScroll', function(event) {
+                    var eventScroll = event.originalEvent;
+                    var delta = eventScroll.wheelDelta || -eventScroll.detail;
+
+                    this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+                    event.preventDefault();
+                });
+
+                $("body").css({
+                    overflowY: "hidden"
+                });
+            }, 500);
+
+        });
+    },
+    scrollableOff: function() {
+
+        var self = navigationDropdown;
+
+        if (!breakpoints.mobileMoreDropdown)
+            return;
+
+        var $wrap = self.dropdown;
+        $wrap.css({
+            height: "auto",
+        });
+        $wrap.find(".wrap").css({
+            height: "auto",
+        });
+
+        $("body").css({
+            overflowY: self.overflow
+        });
+        $(window).scrollTop(self.scroll);
+
+    },
 }
 
- 
+
 
 subnavigationDropdown = {
 
-	dbug : false,  
+    dbug: false,
 
-	trigger : null, 
-	dropdown : null,
-	close : null,
-	navigation : null,
+    trigger: null,
+    dropdown: null,
+    close: null,
+    navigation: null,
 
-	init : function(options){
+    init: function(options) {
 
-		var self = subnavigationDropdown;
+        var self = subnavigationDropdown;
 
-		self.dbug && console.log("subnavigationDropdown init");
+        self.dbug && console.log("subnavigationDropdown init");
 
-		/*
-		Initiate globals
-		*/
-        self.dbug	    = (options.dbug !== undefined)   	 ? options.dbug 	  : false;      
-        self.dropdown   = (options.dropdown !== undefined)   ? options.dropdown   : $("#subnavigation"); 
-        self.close      = (options.close !== undefined)      ? options.close      : $("#subnavigation").find(".close");  
-        self.navigation = (options.navigation !== undefined) ? options.navigation : $("#navigation");   
-        self.trigger    = (options.trigger !== undefined) 	 ? options.trigger 	  : $("#navigation").find(".link"); 
-   
-		//set link dropdown visibility
-		self.trigger.data("hidden",true);
- 
-	}, 
+        /*
+        Initiate globals
+        */
+        self.dbug = (options.dbug !== undefined) ? options.dbug : false;
+        self.dropdown = (options.dropdown !== undefined) ? options.dropdown : $("#subnavigation");
+        self.close = (options.close !== undefined) ? options.close : $("#subnavigation").find(".close");
+        self.navigation = (options.navigation !== undefined) ? options.navigation : $("#navigation");
+        self.trigger = (options.trigger !== undefined) ? options.trigger : $("#navigation").find(".link");
 
-	slickSlider : function($elem){
+        //set link dropdown visibility
+        self.trigger.data("hidden", true);
 
-		var self = subnavigationDropdown;
+    },
 
-		self.dbug && console.log("subnavigationDropdown slickSlider");
-		if(!$elem.data("initiated"))
-			$elem.parent().hide(); 
-		$elem.imagesLoaded().then(function(){
+    slickSlider: function($elem) {
 
-			var params = {
-				mobileFirst : true,
-	    		draggable: true,
-	    		swipe: true, 	
-	    		swipeToSlide : true, 
-				adaptiveHeight: true, 
-				slidesToShow: 4,
-				slidesToScroll : 4,
-				appendArrows: $elem.parent(),
-				prevArrow: '<button type="button" class="slick-prev">︿</button>',
-				nextArrow: '<button type="button" class="slick-next">︿</button>',  
-			};
- 	
- 			var isDevice = breakpoints.mobileMoreDropdown && window.isTouchEnabled();
- 			var twoFrames = $.getWidth() < 540;
-			if(isDevice || twoFrames) {
-				
-				params.slidesToShow = 2;
-				params.slidesToScroll = 2;
-			} 
+        var self = subnavigationDropdown;
 
-			
-			$elem.on("init",function(event, slick){
- 
-				//display slider after its done initializing
-				if(!$elem.data("initiated"))
-					$elem.parent().show(); 
+        self.dbug && console.log("subnavigationDropdown slickSlider");
+        if (!$elem.data("initiated"))
+            $elem.parent().hide();
+        $elem.imagesLoaded().then(function() {
 
-				//slick needs a kick sometimes on slow connections, this makes sure it shows up 
-		    	if(!$elem.data("initiated")){
-		    		$elem.parent().find(".slick-next").trigger("click");
-					$elem.data("initiated",true); 
-				}
+            var params = {
+                mobileFirst: true,
+                draggable: true,
+                swipe: true,
+                swipeToSlide: true,
+                adaptiveHeight: true,
+                slidesToShow: 4,
+                slidesToScroll: 4,
+                appendArrows: $elem.parent(),
+                prevArrow: '<button type="button" class="slick-prev">︿</button>',
+                nextArrow: '<button type="button" class="slick-next">︿</button>',
+            };
 
-				self.dbug && console.log("Initialized slick slider: "+$elem.hasClass("slick-initialized"));
-			});
-			$elem.slick(params);  
-		});
-	},
+            var isDevice = breakpoints.mobileMoreDropdown && window.isTouchEnabled();
+            var twoFrames = $.getWidth() < 540;
+            if (isDevice || twoFrames) {
 
-	topOffset : function(){ 
+                params.slidesToShow = 2;
+                params.slidesToScroll = 2;
+            }
 
-		return $("#navigation").offset().top - $("header").offset().top + $("#navigation").outerHeight();
-	},
 
-	clickTrigger : function($elem) { 
+            $elem.on("init", function(event, slick) {
 
-		var self = subnavigationDropdown;
-	    var deferred = $.Deferred();
+                //display slider after its done initializing
+                if (!$elem.data("initiated"))
+                    $elem.parent().show();
 
-		self.dbug && console.log("subnavigationDropdown click");
-     	    
-    	if($elem.data("hidden")!==undefined && !$elem.data("hidden")) 
-			deferred.resolve(false);   
-    	else
-    		deferred.resolve($elem);  
-  
-	    return deferred.promise();  
-	},
+                //slick needs a kick sometimes on slow connections, this makes sure it shows up 
+                if (!$elem.data("initiated")) {
+                    $elem.parent().find(".slick-next").trigger("click");
+                    $elem.data("initiated", true);
+                }
 
-	/*
-	Hide more dropdown 
-	*/
-	hideTrigger : function() { 
+                self.dbug && console.log("Initialized slick slider: " + $elem.hasClass("slick-initialized"));
+            });
+            $elem.slick(params);
+        });
+    },
 
-		var self = subnavigationDropdown;  
-	    var deferred = $.Deferred();
- 
-		self.dbug && console.log("subnavigationDropdown hide");
- 
-		self.dropdown
-	    	.animate({
-	    		top:settings.hideOffset
-	    	},settings.animationTime,function(){
+    topOffset: function() {
 
-				//set link dropdown visibility
-				self.trigger.data("hidden",true);
-				self.trigger.find(".icon").hide(); 
-	 
-				deferred.resolve(true); 
-	    	}); 
+        return $("#navigation").offset().top - $("header").offset().top + $("#navigation").outerHeight();
+    },
 
-	    return deferred.promise();  
-	}, 
+    clickTrigger: function($elem) {
 
-	/*
-	Hide more dropdown 
-	*/
-	showTrigger : function($elem) { 
+        var self = subnavigationDropdown;
+        var deferred = $.Deferred();
 
-		var self = subnavigationDropdown;  
-	    var deferred = $.Deferred();
-   		
-		self.dbug && console.log("subnavigationDropdown show");
+        self.dbug && console.log("subnavigationDropdown click");
 
-    	var index = $elem.index();
-    		 
-		self.trigger.data("hidden",true);
-    	self.trigger.find(".icon").hide();
+        if ($elem.data("hidden") !== undefined && !$elem.data("hidden"))
+            deferred.resolve(false);
+        else
+            deferred.resolve($elem);
 
-    	$elem.find(".icon").show(); 
-    	$elem.data("hidden",false);
+        return deferred.promise();
+    },
 
-    	self.dropdown
-        	.animate({
-        		top:self.topOffset()
+    /*
+    Hide more dropdown 
+    */
+    hideTrigger: function() {
 
-        	},settings.animationTime,function(){
+        var self = subnavigationDropdown;
+        var deferred = $.Deferred();
 
-		    	//display the current subnavigation section
-		    	self.dropdown.find("section").css({display:'none'});
-		    	var $currentSection = self.dropdown.find("section[data-index="+index+"]");
-	
-					//need to differentiate between mobile/desktop subnavigation for the carousel to render properly
-				if(breakpoints.mobileSubNavigation)
-					$currentSection.css({display:"block"});
-				else
-					$currentSection.css({display:"table"});
-  
-	    		deferred.resolve($currentSection.find(".slick-slider"));
-        	}); 	 
-				   
-	    return deferred.promise();  
-	}, 
+        self.dbug && console.log("subnavigationDropdown hide");
+
+        self.dropdown
+            .animate({
+                top: settings.hideOffset
+            }, settings.animationTime, function() {
+
+                //set link dropdown visibility
+                self.trigger.data("hidden", true);
+                self.trigger.find(".icon").hide();
+
+                deferred.resolve(true);
+            });
+
+        return deferred.promise();
+    },
+
+    /*
+    Hide more dropdown 
+    */
+    showTrigger: function($elem) {
+
+        var self = subnavigationDropdown;
+        var deferred = $.Deferred();
+
+        self.dbug && console.log("subnavigationDropdown show");
+
+        var index = $elem.index();
+
+        self.trigger.data("hidden", true);
+        self.trigger.find(".icon").hide();
+
+        $elem.find(".icon").show();
+        $elem.data("hidden", false);
+
+        self.dropdown
+            .animate({
+                top: self.topOffset()
+
+            }, settings.animationTime, function() {
+
+                //display the current subnavigation section
+                self.dropdown.find("section").css({
+                    display: 'none'
+                });
+                var $currentSection = self.dropdown.find("section[data-index=" + index + "]");
+
+                //need to differentiate between mobile/desktop subnavigation for the carousel to render properly
+                if (breakpoints.mobileSubNavigation)
+                    $currentSection.css({
+                        display: "block"
+                    });
+                else
+                    $currentSection.css({
+                        display: "table"
+                    });
+
+                deferred.resolve($currentSection.find(".slick-slider"));
+            });
+
+        return deferred.promise();
+    },
 }
 
- 
-$(document).ready(function() { 
+
+$(document).ready(function() {
 
 
-	/*
-	Set navigation visibility after menu is loaded - @@@@ rework this
-	*/
-	$("#navigation").find("#navigation-visible-links").fadeIn();  
-	$("#navigation").find(".navigation-button,.account-button")
-		.css({
-			opacity:0,
-			visibility:"visible"
-		})
-		.animate({
-			opacity:.8,
-		},settings.animationTime,function(){
-			$("#navigation").removeAttr("style");
-		}); 
+    /*
+    Set navigation visibility after menu is loaded - @@@@ rework this
+    */
+    $("#navigation").find("#navigation-visible-links").fadeIn();
+    $("#navigation").find(".navigation-button,.account-button")
+        .css({
+            opacity: 0,
+            visibility: "visible"
+        })
+        .animate({
+            opacity: .8,
+        }, settings.animationTime, function() {
+            $("#navigation").removeAttr("style");
+        });
 
-	/*
-	Adjust navigation settings to react to click/touch and not hover
-	*/
-	if(window.isTouchEnabled())
-		settings.navigationClick = true;
+    /*
+    Adjust navigation settings to react to click/touch and not hover
+    */
+    if (window.isTouchEnabled())
+        settings.navigationClick = true;
 
-	/*
-	################################################
-	header (main site header)
-	################################################
-	*/	
-	header.init({
-		dbug:!true
-	}); 
-	      
+    /*
+    ################################################
+    header (main site header)
+    ################################################
+    */
+    header.init({
+        dbug: !true
+    });
 
-	/*
-	################################################
-	navigationDropdown (the more link on main menu)
-	################################################
-	*/	
-	navigationDropdown.init({
-		dbug:true
-	}); 
- 	
- 	if(settings.navigationClick){ 
-		//Bindings on navigationDropdown (the more link on main menu) 
-		navigationDropdown.trigger.click(function(event){ 
-			event.preventDefault(); 
 
-			subnavigationDropdown.hideTrigger(); 
-			navigationSearch.hideTriggerMobile(); 
-			navigationSearch.hideTriggerDesktop(); 
+    /*
+    ################################################
+    navigationDropdown (the more link on main menu)
+    ################################################
+    */
+    navigationDropdown.init({
+        dbug: true
+    });
 
-			navigationDropdown.clickTrigger().then(function(response){
+    if (settings.navigationClick) {
+        //Bindings on navigationDropdown (the more link on main menu) 
+        navigationDropdown.trigger.click(function(event) {
+            event.preventDefault();
 
-				if(response)
-					navigationDropdown.scrollableOn();
-				else
-					navigationDropdown.scrollableOff();
-				 
-				//navigation currently hidden, show it
-				if(response)
-					navigationDropdown.showTrigger();
-				else
-					navigationDropdown.hideTrigger();
-			}); 
-		}); 
-	}else{ 
-	    navigationDropdown.trigger.mouseenter(function(event){ 
-			event.preventDefault(); 
-		  	
-			subnavigationDropdown.hideTrigger(); 
-			navigationSearch.hideTriggerMobile(); 
-			navigationSearch.hideTriggerDesktop(); 
- 
-			//if we initiate too many carousels at the same time it will break. 
-			navigationDropdown.scrollableOn();  
-			navigationDropdown.showTrigger();  
-		 
-	    }); 
-	    navigationDropdown.dropdown.mouseleave(function(event){ 
-			event.preventDefault(); 
-		  
-		  	if(breakpoints.mobileSubNavigation && window.isTouchEnabled())
-				navigationDropdown.scrollableOff();
-			
-			navigationDropdown.hideTrigger(); 
-	    }); 
-	}
+            subnavigationDropdown.hideTrigger();
+            navigationSearch.hideTriggerMobile();
+            navigationSearch.hideTriggerDesktop();
 
-    navigationDropdown.close.click(function(){
+            navigationDropdown.clickTrigger().then(function(response) {
 
-    	settings.dbug && console.log("Close navigation with button: "+settings.hideOffset);
+                if (response)
+                    navigationDropdown.scrollableOn();
+                else
+                    navigationDropdown.scrollableOff();
 
-	  	navigationDropdown.scrollableOff();
-    	navigationDropdown.hideTrigger();
+                //navigation currently hidden, show it
+                if (response)
+                    navigationDropdown.showTrigger();
+                else
+                    navigationDropdown.hideTrigger();
+            });
+        });
+    } else {
+        navigationDropdown.trigger.mouseenter(function(event) {
+            event.preventDefault();
+
+            subnavigationDropdown.hideTrigger();
+            navigationSearch.hideTriggerMobile();
+            navigationSearch.hideTriggerDesktop();
+
+            //if we initiate too many carousels at the same time it will break. 
+            navigationDropdown.scrollableOn();
+            navigationDropdown.showTrigger();
+
+        });
+        navigationDropdown.dropdown.mouseleave(function(event) {
+            event.preventDefault();
+
+            if (breakpoints.mobileSubNavigation && window.isTouchEnabled())
+                navigationDropdown.scrollableOff();
+
+            navigationDropdown.hideTrigger();
+        });
+    }
+
+    navigationDropdown.close.click(function() {
+
+        settings.dbug && console.log("Close navigation with button: " + settings.hideOffset);
+
+        navigationDropdown.scrollableOff();
+        navigationDropdown.hideTrigger();
     });
 
 
@@ -476,113 +480,113 @@ $(document).ready(function() {
 	################################################
 	subnavigationDropdown (the dropdown for the second level menu)
 	################################################
-	*/	
-	subnavigationDropdown.init({
-		dbug:!true
-	});
- 	
- 	if(settings.navigationClick){
+	*/
+    subnavigationDropdown.init({
+        dbug: !true
+    });
 
-		subnavigationDropdown.trigger.click(function(event){
-			event.preventDefault();
+    if (settings.navigationClick) {
 
-			navigationDropdown.hideTrigger(); 
-			navigationSearch.hideTriggerMobile(); 
-			navigationSearch.hideTriggerDesktop(); 
+        subnavigationDropdown.trigger.click(function(event) {
+            event.preventDefault();
 
-			subnavigationDropdown.clickTrigger($(this)).then(function(response){
+            navigationDropdown.hideTrigger();
+            navigationSearch.hideTriggerMobile();
+            navigationSearch.hideTriggerDesktop();
 
-				//navigation currently hidden, show it
-				if(response){
-					subnavigationDropdown.showTrigger(response).then(function(response){
+            subnavigationDropdown.clickTrigger($(this)).then(function(response) {
 
-			    		if(response)
-			    			subnavigationDropdown.slickSlider(response);
-					});
-				}else
-					subnavigationDropdown.hideTrigger();
-			}); 
-		});
-		
- 	}else{ 
-	    subnavigationDropdown.trigger.mouseenter(function(event){
-			event.preventDefault();
+                //navigation currently hidden, show it
+                if (response) {
+                    subnavigationDropdown.showTrigger(response).then(function(response) {
 
-			navigationDropdown.hideTrigger(); 
-			navigationSearch.hideTriggerMobile(); 
-			navigationSearch.hideTriggerDesktop(); 
+                        if (response)
+                            subnavigationDropdown.slickSlider(response);
+                    });
+                } else
+                    subnavigationDropdown.hideTrigger();
+            });
+        });
 
-			subnavigationDropdown.showTrigger($(this)).then(function(response){
-	    		if(response)
-	    			subnavigationDropdown.slickSlider(response);
-			});
-	    });
-	    subnavigationDropdown.dropdown.mouseleave(function(event){
-			event.preventDefault();
+    } else {
+        subnavigationDropdown.trigger.mouseenter(function(event) {
+            event.preventDefault();
 
-			subnavigationDropdown.hideTrigger(); 
-	    });
-	}
+            navigationDropdown.hideTrigger();
+            navigationSearch.hideTriggerMobile();
+            navigationSearch.hideTriggerDesktop();
+
+            subnavigationDropdown.showTrigger($(this)).then(function(response) {
+                if (response)
+                    subnavigationDropdown.slickSlider(response);
+            });
+        });
+        subnavigationDropdown.dropdown.mouseleave(function(event) {
+            event.preventDefault();
+
+            subnavigationDropdown.hideTrigger();
+        });
+    }
 
     //close whole section 
-    subnavigationDropdown.close.click(function(){
+    subnavigationDropdown.close.click(function() {
 
-    	settings.dbug && console.log("Close navigation with button: "+settings.hideOffset);
+        settings.dbug && console.log("Close navigation with button: " + settings.hideOffset);
 
-		navigationDropdown.hideTrigger(); 
-		subnavigationDropdown.hideTrigger(); 
+        navigationDropdown.hideTrigger();
+        subnavigationDropdown.hideTrigger();
     });
 
 
- 
+
 
 });
 
-$(window).load(function() { 
+$(window).load(function() {
 
 
-	/*
-	Gloabl bindings
-	*/
-	(function() {   
+    /*
+    Gloabl bindings
+    */
+    (function() {
 
-	    //reset subnavigation on screen resize 
-	    $(window).resize(function() { 
-			
-	    	settings.dbug && console.log("Close all dropdowns on resize: "+$.getWidth()); 
+        //reset subnavigation on screen resize 
+        $(window).resize(function() {
 
-			if(false)//we will make it into a dropdown with a fom inside later
-				navigationAccount.hideTrigger(); 
-			navigationDropdown.hideTrigger();
-			subnavigationDropdown.hideTrigger();
-			navigationSearch.hideTriggerDesktop(); 
-			navigationSearch.hideTriggerMobile(); 
-		});
+            settings.dbug && console.log("Close all dropdowns on resize: " + $.getWidth());
 
-		//reset subnavigation on blur
-	    $("main").bind("click",function() { 
-			
-	    	settings.dbug && console.log("Close all dropdowns on blur");
+            if (false) //we will make it into a dropdown with a fom inside later
+                navigationAccount.hideTrigger();
+            navigationDropdown.hideTrigger();
+            subnavigationDropdown.hideTrigger();
+            navigationSearch.hideTriggerDesktop();
+            navigationSearch.hideTriggerMobile();
+        });
 
-			if(false)//we will make it into a dropdown with a fom inside later
-				navigationAccount.hideTrigger(); 
-			navigationDropdown.hideTrigger();
-			subnavigationDropdown.hideTrigger();
-			navigationSearch.hideTriggerDesktop(); 
-			navigationSearch.hideTriggerMobile(); 
-		});  
- 		
-  	    //resizer on scroll 
-	    $(window).bind("scroll touchmove",function() {
+        //reset subnavigation on blur
+        $("main").bind("click", function() {
 
-	        if ($(window).scrollTop() > header.getOffset())
-	            header.headerFix();
-	        else
-	            header.headerRelease(); 
-	    });  
- 
+            settings.dbug && console.log("Close all dropdowns on blur");
 
-	})();  
+            if (false) //we will make it into a dropdown with a fom inside later
+                navigationAccount.hideTrigger();
+            navigationDropdown.hideTrigger();
+            subnavigationDropdown.hideTrigger();
+            navigationSearch.hideTriggerDesktop();
+            navigationSearch.hideTriggerMobile();
+        });
+
+        //resizer on scroll 
+        $(window).bind("scroll touchmove", function() {
+
+            if ($(window).scrollTop() > header.getOffset())
+                header.headerFix();
+            else
+                header.headerRelease();
+        });
+
+
+    })();
 });
 
 
@@ -590,142 +594,152 @@ $(window).load(function() {
 $(function() {
 
 
-	/*
-	Get width of window, exact
-	*/
-	$.getWidth = function() {
-	    return Math.max($(window).width(), window.innerWidth);
-	}
+    /*
+    Get width of window, exact
+    */
+    $.getWidth = function() {
+        return Math.max($(window).width(), window.innerWidth);
+    }
 
-	/*
-	Get direction of scroll, true for up or static, false for down
-	*/
-	$.scrollDirectionUp = function() {
+    /*
+    Get direction of scroll, true for up or static, false for down
+    */
+    $.scrollDirectionUp = function() {
 
-		if(window.scrollTop===undefined)
-			window.scrollTop = 0;
-		var result = $(window).scrollTop() <= window.scrollTop;
+        if (window.scrollTop === undefined)
+            window.scrollTop = 0;
+        var result = $(window).scrollTop() <= window.scrollTop;
 
-		window.lastScrollTop = $(window).scrollTop();
-	    return result;
-	}
+        window.lastScrollTop = $(window).scrollTop();
+        return result;
+    }
 
-	/*
+    /*
     Add or remove spinner depending on state of spinner
-    */ 
+    */
     $.fn.loadingIcon = function() {
         var $loadingel = $("#loading-icon");
 
-        if(!$loadingel.length) {
+        if (!$loadingel.length) {
             settings.dbug && console.log("spinner start");
             this.append("<div class='loading-icon' id='loading-icon'></div>");
-        }
-        else {
+        } else {
             settings.dbug && console.log("spinner end");
             $loadingel.remove();
         }
     };
 
-	 
-  	 
 
-  	/*
+
+
+    /*
 	Allow an event to fire after all images are loaded
   	*/
-	$.fn.imagesLoaded = function () {
+    $.fn.imagesLoaded = function() {
 
-	    // get all the images (excluding those with no src attribute)
-	    var $imgs = this.find('img[src!=""]');
-	    // if there's no images, just return an already resolved promise
-	    if (!$imgs.length) {return $.Deferred().resolve().promise();}
+        // get all the images (excluding those with no src attribute)
+        var $imgs = this.find('img[src!=""]');
+        // if there's no images, just return an already resolved promise
+        if (!$imgs.length) {
+            return $.Deferred().resolve().promise();
+        }
 
-	    // for each image, add a deferred object to the array which resolves when the image is loaded (or if loading fails)
-	    var dfds = [];  
-	    $imgs.each(function(){
+        // for each image, add a deferred object to the array which resolves when the image is loaded (or if loading fails)
+        var dfds = [];
+        $imgs.each(function() {
 
-	        var dfd = $.Deferred();
-	        dfds.push(dfd);
-	        var img = new Image();
-	        img.onload = function(){dfd.resolve();}
-	        img.onerror = function(){dfd.resolve();}
-	        img.src = this.src;
+            var dfd = $.Deferred();
+            dfds.push(dfd);
+            var img = new Image();
+            img.onload = function() {
+                dfd.resolve();
+            }
+            img.onerror = function() {
+                dfd.resolve();
+            }
+            img.src = this.src;
 
-	    });
+        });
 
-	    // return a master promise object which will resolve when all the deferred objects have resolved
-	    // IE - when all the images are loaded
-	    return $.when.apply($,dfds);
+        // return a master promise object which will resolve when all the deferred objects have resolved
+        // IE - when all the images are loaded
+        return $.when.apply($, dfds);
 
-	}
+    }
 
- 	/*
+    /*
 	JS rotation
  	*/
-	$.fn.rotate = function() {
-  		
-		var $elie = $(this);
-		var degree=0;
-		var timer;
+    $.fn.rotate = function() {
 
-		if($elie.data("rotated") === undefined || $elie.data("rotated")==false){
-			$elie.data("rotated",false);
-			$elie.data("limit",0);    
-			degree=settings.rotationDegree; 
-		}
+        var $elie = $(this);
+        var degree = 0;
+        var timer;
 
-		settings.dbug && console.log("rotated: "+$elie.data("rotated"));
-		settings.dbug && console.log("limit: "+$elie.data("limit"));
-		settings.dbug && console.log("degree: "+degree);
-		settings.dbug && console.log("");
- 	 	
-	    function rotateHelper() {
-		    
-		    //click to close soclai bar  
-		    if($elie.data("rotated")){
-  
-		    	$elie.css({ WebkitTransform: 'rotate(' + degree + 'deg)'});  
-		        $elie.css({ '-moz-transform': 'rotate(' + degree + 'deg)'});                      
-		        timer = setTimeout(function() {
-		            ++degree; 
-		            rotateHelper();
-		        },.5);
+        if ($elie.data("rotated") === undefined || $elie.data("rotated") == false) {
+            $elie.data("rotated", false);
+            $elie.data("limit", 0);
+            degree = settings.rotationDegree;
+        }
 
-		        if(degree>=45){
-		        	clearTimeout(timer);  
-					$elie.data("rotated",false);
-					$elie.data("limit",0);     
-		        }
+        settings.dbug && console.log("rotated: " + $elie.data("rotated"));
+        settings.dbug && console.log("limit: " + $elie.data("limit"));
+        settings.dbug && console.log("degree: " + degree);
+        settings.dbug && console.log("");
 
-		    //click to open soclai bar
-		    }else{
-  
-		        $elie.css({ WebkitTransform: 'rotate(' + degree + 'deg)'});  
-		        $elie.css({ '-moz-transform': 'rotate(' + degree + 'deg)'});                      
-		        timer = setTimeout(function() {
-		            --degree; 
-		            rotateHelper();
-		        },.5);
+        function rotateHelper() {
 
-		        if(degree<=$elie.data("limit")){ 
-		        	clearTimeout(timer); 
-					$elie.data("rotated",true);
-					$elie.data("limit",settings.rotationDegree);    
-		        }
-		    }
-	    } 
-	    rotateHelper(); 
+            //click to close soclai bar  
+            if ($elie.data("rotated")) {
 
-	    return $(this);
-	};
+                $elie.css({
+                    WebkitTransform: 'rotate(' + degree + 'deg)'
+                });
+                $elie.css({
+                    '-moz-transform': 'rotate(' + degree + 'deg)'
+                });
+                timer = setTimeout(function() {
+                    ++degree;
+                    rotateHelper();
+                }, .5);
+
+                if (degree >= 45) {
+                    clearTimeout(timer);
+                    $elie.data("rotated", false);
+                    $elie.data("limit", 0);
+                }
+
+                //click to open soclai bar
+            } else {
+
+                $elie.css({
+                    WebkitTransform: 'rotate(' + degree + 'deg)'
+                });
+                $elie.css({
+                    '-moz-transform': 'rotate(' + degree + 'deg)'
+                });
+                timer = setTimeout(function() {
+                    --degree;
+                    rotateHelper();
+                }, .5);
+
+                if (degree <= $elie.data("limit")) {
+                    clearTimeout(timer);
+                    $elie.data("rotated", true);
+                    $elie.data("limit", settings.rotationDegree);
+                }
+            }
+        }
+        rotateHelper();
+
+        return $(this);
+    };
 
 
-	
- 
 
 
-	 
-}); 
- 
+});
+
 
 
 /*
@@ -733,30 +747,25 @@ Adjust breakpoints
 */
 $(function() {
 
-	breakpoints.mobileSubNavigation = $.getWidth() <= 800 || window.isTouchEnabled();  
-	breakpoints.mobileSearch = $.getWidth() <= 740; 
-	breakpoints.mobileNavigation = $.getWidth() <= 680; 
-	breakpoints.mobileMoreDropdown = $.getWidth() <= 650; 
+    breakpoints.mobileSubNavigation = $.getWidth() <= 800 || window.isTouchEnabled();
+    breakpoints.mobileSearch = $.getWidth() <= 740;
+    breakpoints.mobileNavigation = $.getWidth() <= 680;
+    breakpoints.mobileMoreDropdown = $.getWidth() <= 650;
 
-	$(window).resize(function() {
-		
-		breakpoints.mobileSubNavigation = $.getWidth() <= 800 || window.isTouchEnabled();  
-		breakpoints.mobileSearch = $.getWidth() <= 740; 
-		breakpoints.mobileNavigation = $.getWidth() <= 680; 
-		breakpoints.mobileMoreDropdown = $.getWidth() <= 650;
- 
-	});
-	$(window).load(function() {
-		
-		breakpoints.mobileSubNavigation = $.getWidth() <= 800 || window.isTouchEnabled();  
-		breakpoints.mobileSearch = $.getWidth() <= 740; 
-		breakpoints.mobileNavigation = $.getWidth() <= 680; 
-		breakpoints.mobileMoreDropdown = $.getWidth() <= 650;
- 
-	}); 
-});	
+    $(window).resize(function() {
 
+        breakpoints.mobileSubNavigation = $.getWidth() <= 800 || window.isTouchEnabled();
+        breakpoints.mobileSearch = $.getWidth() <= 740;
+        breakpoints.mobileNavigation = $.getWidth() <= 680;
+        breakpoints.mobileMoreDropdown = $.getWidth() <= 650;
 
+    });
+    $(window).load(function() {
 
+        breakpoints.mobileSubNavigation = $.getWidth() <= 800 || window.isTouchEnabled();
+        breakpoints.mobileSearch = $.getWidth() <= 740;
+        breakpoints.mobileNavigation = $.getWidth() <= 680;
+        breakpoints.mobileMoreDropdown = $.getWidth() <= 650;
 
-
+    });
+});
